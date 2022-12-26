@@ -41,31 +41,6 @@ namespace RFord.Projects.NugetScraper
         {
             SourceRepository repository = Repository.Factory.GetCoreV3(_applicationOptions.Source);
 
-            /*
-            SourceCacheContext cache = new SourceCacheContext();
-
-
-
-            DependencyInfoResource dependencyResolver = await repository.GetResourceAsync<DependencyInfoResource>(stoppingToken);
-
-            var packageVersionsResult = await dependencyResolver.ResolvePackages(packageId: "CsvHelper", cacheContext: cache, log: _nugetLogger, token: stoppingToken);
-
-            var relevantPackages = packageVersionsResult.Where(x => x.Listed && !x.Identity.Version.ReleaseLabels.Any());
-
-            var packagesToDownload = relevantPackages.Select(x => x.Identity).ToArray();
-
-            var dependenciesToDownload = relevantPackages
-                                            .SelectMany(x => x.DependencyGroups)
-                                            .Where(x => _targetFrameworkProvider.GetTargetFrameworks().Contains(x.TargetFramework))
-                                            .SelectMany(x => x.Packages)
-                                            .Select(x =>
-                                                new PackageIdentity(x.Id, x.VersionRange.MinVersion)
-                                            )
-                                            .Distinct()
-                                            .ToArray()
-                                            ;
-            */
-
             _logger.LogInformation($"Retrieving metadata for package '{_applicationOptions.TargetPackage}'.");
 
             var metadataSearcher = await repository.GetResourceAsync<PackageMetadataResource>();
