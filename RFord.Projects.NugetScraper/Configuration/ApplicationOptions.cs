@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 
-namespace RFord.Projects.NugetScraper
+namespace RFord.Projects.NugetScraper.Configuration
 {
     public class ApplicationOptions : IValidateOptions<ApplicationOptions>
     {

@@ -4,6 +4,8 @@ using Microsoft.Extensions.Options;
 using NuGet.Packaging.Core;
 using NuGet.Protocol;
 using NuGet.Protocol.Core.Types;
+using RFord.Projects.NugetScraper.Configuration;
+using RFord.Projects.NugetScraper.Services;
 //using NuGet.Protocol;
 
 namespace RFord.Projects.NugetScraper

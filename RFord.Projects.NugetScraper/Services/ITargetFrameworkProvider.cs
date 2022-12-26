@@ -1,6 +1,6 @@
 ﻿using NuGet.Frameworks;
 
-namespace RFord.Projects.NugetScraper
+namespace RFord.Projects.NugetScraper.Services
 {
     public interface ITargetFrameworkProvider
     {

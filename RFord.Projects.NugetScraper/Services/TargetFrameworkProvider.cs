@@ -1,7 +1,8 @@
 ﻿using NuGet.Frameworks;
 using Microsoft.Extensions.Options;
+using RFord.Projects.NugetScraper.Configuration;
 
-namespace RFord.Projects.NugetScraper
+namespace RFord.Projects.NugetScraper.Services
 {
     public class TargetFrameworkProvider : ITargetFrameworkProvider
     {

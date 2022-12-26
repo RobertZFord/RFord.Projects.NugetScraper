@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using RFord.Projects.NugetScraper.Services;
+using RFord.Projects.NugetScraper.Configuration;
 
 namespace RFord.Projects.NugetScraper
 {
