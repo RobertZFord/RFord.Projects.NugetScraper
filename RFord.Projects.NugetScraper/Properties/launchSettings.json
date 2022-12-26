@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "RFord.Projects.NugetScraper": {
+      "commandName": "Project",
+      "commandLineArgs": "--TargetPackage=CsvHelper --DownloadDirectory=Z:\\Desktop\\nuget_output_test"
+    }
+  }
+}
