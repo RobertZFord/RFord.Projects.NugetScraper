@@ -30,7 +30,7 @@ namespace RFord.Projects.NugetScraper
                                 services.AddSingleton(NuGet.Protocol.Core.Types.NullSourceCacheContext.Instance);
                                 services.AddHostedService<MainLoop>();
 
-                                services.AddOptions<ApplicationOptions>().Bind(hostContext.Configuration.GetSection("ApplicationOptions")).ValidateOnStart();
+                                services.AddOptions<ApplicationOptions>().Bind(hostContext.Configuration.GetSection(nameof(ApplicationOptions))).ValidateOnStart();
                                 services.AddSingleton<IValidateOptions<ApplicationOptions>, ApplicationOptions>();
                             })
                             .UseConsoleLifetime()
