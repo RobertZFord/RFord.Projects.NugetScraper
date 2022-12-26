@@ -87,37 +87,45 @@ namespace RFord.Projects.NugetScraper
             _logger.LogInformation("Downloading specified packages");
             FindPackageByIdResource versionLister = await repository.GetResourceAsync<FindPackageByIdResource>(token: stoppingToken);
 
-            Queue<PackageIdentity> processingQueue = new Queue<PackageIdentity>(Enumerable.Empty<PackageIdentity>().Concat(packagesToDownload).Concat(dependenciesToDownload));
-            _logger.LogDebug($"{processingQueue.Count} package(s) to download.");
+            IEnumerable<PackageIdentity> processingQueue = Enumerable.Empty<PackageIdentity>().Concat(packagesToDownload).Concat(dependenciesToDownload);
+
+            _logger.LogDebug($"{processingQueue.Count()} package(s) to download.");
 
             if (!Directory.Exists(_applicationOptions.DownloadDirectory))
             {
                 Directory.CreateDirectory(_applicationOptions.DownloadDirectory);
             }
 
-            while (processingQueue.Count > 0)
-            {
-                PackageIdentity target = processingQueue.Dequeue();
-
-                string outputPath = Path.Combine(_applicationOptions.DownloadDirectory, $"{target}.nupkg");
-
-                using (FileStream ofs = File.Open(outputPath, FileMode.Create, FileAccess.Write, FileShare.None))
+            await Parallel.ForEachAsync(
+                source: processingQueue,
+                parallelOptions: new ParallelOptions
                 {
-                    bool success = await versionLister.CopyNupkgToStreamAsync(
-                        id: target.Id,
-                        version: target.Version,
-                        destination: ofs,
-                        cacheContext: _cacheContext,
-                        logger: _nugetLogger,
-                        cancellationToken: stoppingToken
-                    );
+                    CancellationToken = stoppingToken,
+                    MaxDegreeOfParallelism = Environment.ProcessorCount
+                },
+                body: async (target, token) =>
+                {
+                    string outputPath = Path.Combine(_applicationOptions.DownloadDirectory, $"{target}.nupkg");
 
-                    _logger.Log(
-                        logLevel: success ? LogLevel.Information : LogLevel.Error,
-                        message: $"{(success ? "Downloaded" : "Unable to download")} '{target}'{(success ? '.' : '!')}"
-                    );
+                    using (FileStream ofs = File.Open(outputPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                    {
+                        // unknown if this is thread-safe, but testing yields identical hashes with no deviations yet.
+                        bool success = await versionLister.CopyNupkgToStreamAsync(
+                            id: target.Id,
+                            version: target.Version,
+                            destination: ofs,
+                            cacheContext: _cacheContext,
+                            logger: _nugetLogger,
+                            cancellationToken: stoppingToken
+                        );
+
+                        _logger.Log(
+                            logLevel: success ? LogLevel.Information : LogLevel.Error,
+                            message: $"{(success ? "Downloaded" : "Unable to download")} '{target}'{(success ? '.' : '!')}"
+                        );
+                    }
                 }
-            }
+            );
 
             _hostApplicationLifetime.StopApplication();
         }
